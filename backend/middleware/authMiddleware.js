@@ -1,4 +1,4 @@
-import User from '../models/User.js';
+import User from '../models/userModel.js';
 import jwt from 'jsonwebtoken';
 
 export const protect=async(req,res,next)=>{
@@ -17,4 +17,6 @@ export const protect=async(req,res,next)=>{
     } catch (error) {
         res.status(401).json({message:"token failed", error:error.message});
     }
-}
+};
+
+export default protect;

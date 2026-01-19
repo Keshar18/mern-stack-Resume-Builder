@@ -1,5 +1,8 @@
 import express from 'express';
-import { registerUser } from '../controllers/userControllers';
+import protect from '../middleware/authMiddleware.js';
+
+
+import { registerUser, loginUser, getUserProfile } from '../controllers/userControllers.js';
 
 const userRouter = express.Router();
 userRouter.post('/register', registerUser);
