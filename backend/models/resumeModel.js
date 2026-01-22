@@ -35,6 +35,51 @@ const ResumeSchema= new mongoose.Schema({
         website: String
     },
 
+// let's add work exp..
 
+    workExp:[{
+        company:String,
+        role:String,
+        startDate:String,
+        endDate:String,
+        description: String,
+    },
+],
+    education:[{
+        institution: String,
+        degree: String,
+        fieldOfStudy: String,
+        startDate: String,
+        endDate: String,
+    },
+],
+    skills:[{
+        name: String,
+        progress: String,
+    },
+],
 
-   
+    projects:[{
+        title: String,
+        description: String,
+        github: String,
+        liveDemo: String,
+    },
+],
+
+    certifications:[{
+        title: String,
+        issuer: String,
+        year: String,
+        credentialId: String,
+    },
+],
+
+    languages:[{
+        name: String,
+        progress: Number,
+    },
+],
+
+     interests:[String],
+});
