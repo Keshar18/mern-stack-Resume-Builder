@@ -1,4 +1,6 @@
 import resume from '../models/resumeModel.js';
+import fs from 'fs';
+import path from 'path';
 
 
 // DATA FOR CREATE RESUME CONTROLLER
@@ -114,5 +116,75 @@ export const getUserResumeById= async(req,res)=>{
 }
 }
 
+
+//update resume
+
+export const updateResume= async(req,res)=>{
+    try {
+        const resume = await Resume.findOne({
+            _id:req.params.id,
+            userId:req.user._id
+        })
+        if(!resume){
+            return res.status(404).json({message:'Resume not found'});
+        }
+     //merge  updated resume data
+    Object.assign(resume, req.body);
+
+    //save updated resume
+    await savedResume.save();
+    res.json(savedResume);
+  }
+    catch (error) {
+        res.status(500).json({message:'Failed to update resume', error:error.message});
+    }
+}
+
+//delete resume
+export const deleteResume= async(req,res)=>{
+    try {
+        const resume = await Resume.findOne({
+            _id:req.params.id,
+            userId:req.user._id
+        })
+        if(!resume){
+            return res.status(404).json({message:'Resume not found'});
+        }
+        //create a uploads folder and store the resume there
+        const uploadsFolder = path.join(process.cwd(), 'uploads');
+
+        //delete thumbnail function 
+        if(resume.thumbnailLink){
+            const thumbnailPath = path.join(uploadsFolder, path.basename(resume.thumbnailLink));
+            if(fs.existsSync(thumbnailPath)){
+                fs.unlinkSync(thumbnailPath);
+            }
+
+        }
+        if(resume.profileInfo?.profilePreviewUrl){
+            const oldProfile=path.join(
+                uploadsFolder,
+                path.basename(resume.profileInfo.profilePreviewUrl)
+            )
+            if(fs.existsSync(oldProfile)){
+                fs.unlinkSync(oldProfile);
+            }
+        }
+
+        //delete resume from doc
+        const deleted =await Resume.findByIdAndDelete({
+            _id: req.params.id,
+            userId: req.user._id
+        })
+
+        if(!deleted){
+            return res.status(404).json({message:'Resume not found or not authorized'});
+        }
+        await resume.remove();
+        res.json({message:'Resume deleted successfully'});
+    } catch (error) {
+        res.status(500).json({message:'Failed to delete resume', error:error.message});
+    }
+}    
 
 
