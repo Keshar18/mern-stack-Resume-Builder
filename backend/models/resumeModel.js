@@ -82,4 +82,10 @@ const ResumeSchema= new mongoose.Schema({
 ],
 
      interests:[String],
-});
+},
+{
+    timestamps: {createdAt: 'createdAt', updatedAt: 'updatedAt'}
+}
+);
+
+export default mongoose.model('Resume', ResumeSchema);
