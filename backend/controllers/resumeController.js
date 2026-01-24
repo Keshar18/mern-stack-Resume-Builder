@@ -86,3 +86,18 @@ export const createResume = async (req, res) => {
 }
 
 
+//GET function to fetch all resumes for a user
+
+export const getUserResumes= async(req,res)=>{
+    try {
+        const resumes = await Resume.find({userId: req.user._id}).sort({
+            updatedAt: -1
+        });
+        res.json(resumes);
+        
+    } catch (error) {
+        res.status(500).json({message: 'Failed to fetch resumes', error: error.message});
+    }
+}
+
+
