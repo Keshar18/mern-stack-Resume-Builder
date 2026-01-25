@@ -28,17 +28,24 @@ export const uploadResumeImages= async(req,res)=>{
             const newProfileImage= req.files.profileImage?.[0];
 
             if(newProfileImage){
-                if(resume.profileInfo?).profilePreview{
-                    const oldThumbnail= path.join(uploadsFolder, path.basename(resume.thumbnailLink));
-                    if(fs.existsSync(oldThumbnail))
-                        fs.unlinkSync(oldThumbnail);
+                if(resume.profileInfo?.profilePreviewUrl){
+                    const oldProfileImage= path.join(uploadsFolder, path.basename(resume.profileInfo?.profilePreviewUrl));
+                    if(fs.existsSync(oldProfile))
+                        fs.unlinkSync(oldProfile);
                 }
-                resume.thumbnailLink= `${baseUrl}/uploads/${newThumbnail.filename}`;
+                resume.profileInfo.profilePreviewUrl= `${baseUrl}/uploads/${newProfileImage.filename}`;
             }
-        }
+            await resume.save();
+            res.status(200).json({message:"Images uploaded successfully",
+            thumbnailLink: resume.thumbnailLink,
+            profilePreviewUrl: resume.profileInfo.profilePreviewUrl,
+            })
+        })
 
-}catch (error) {
+    } catch (error) {
+        console.log('Error uploading images:', error);
         res.status(500).json({message:"Image upload failed", error:error.message});
+        
         
     }
 
